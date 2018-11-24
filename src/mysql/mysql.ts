@@ -22,6 +22,16 @@ export default class MySQL {
         return this._instance || (this._instance = new this);
     }
 
+    static executeQuery(query: string, callback: Function) {
+        this.instance.connection.query(query, (error, results: Object[], fields) => {
+            if (error) return callback(error);
+
+            if (results.length === 0) return callback('El registro solicitado no existe');
+
+            callback(null, results)
+        });
+    };
+
     private connectDB() {
         this.connection.connect((error: mysql.MysqlError) => {
             if (error) {

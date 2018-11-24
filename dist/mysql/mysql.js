@@ -18,6 +18,16 @@ class MySQL {
     static get instance() {
         return this._instance || (this._instance = new this);
     }
+    static executeQuery(query, callback) {
+        this.instance.connection.query(query, (error, results, fields) => {
+            if (error)
+                return callback(error);
+            if (results.length === 0)
+                return callback('El registro solicitado no existe');
+            callback(null, results);
+        });
+    }
+    ;
     connectDB() {
         this.connection.connect((error) => {
             if (error) {
